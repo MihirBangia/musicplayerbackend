@@ -2,16 +2,17 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const User = require("./models/userModel");
+const Playlist = require("./models/playlistModel");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const { verifytoken } = require("./middleware/authtoken");
 
 const corsOptions = {
-    origin: 'http://localhost:3000', // Adjust this to your frontend origin
-    credentials: true,
-  };
-  
+  origin: "http://localhost:3000", // Adjust this to your frontend origin
+  credentials: true,
+};
 
 dotenv.config();
 app.use(cors(corsOptions));
@@ -29,19 +30,20 @@ app.get("/", (req, res) => {
 });
 
 //connection to db
-mongoose
-  .connect(process.env.DB_CONNECT)
-  .then(() => console.log("connected to db"));
+mongoose.connect(process.env.DB_CONNECT).then(() => console.log("connected to db"));
+
+  //code for user registration
 
 app.post("/user", async (req, res) => {
   try {
-    console.log(req.body);
     const user = await User.create(req.body);
     res.send(user);
   } catch (error) {
     res.send(error.message);
   }
 });
+
+//code for user login
 
 app.post("/login", async (req, res) => {
   try {
@@ -70,3 +72,72 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//code for adding song to playlist
+
+app.post("/addtoplaylist", verifytoken, async (req, res) => {
+  const newSong = req.body;
+  Playlist.findOne({ email: req.email })
+    .then((foundPlaylist) => {
+      if (foundPlaylist) {
+          foundPlaylist.songs.push(newSong);
+          return foundPlaylist.save();
+        } 
+      else {
+        return Playlist.create({
+          email: req.email,
+          songs: [newSong],
+        });
+      }
+    })
+    .then((updatedPlaylist) => {
+      console.log("Playlist updated:", updatedPlaylist);
+      res.send(updatedPlaylist)
+    })
+    .catch((error) => {
+      console.error("Error updating playlist:", error);
+    });
+});
+
+//code for getting user specific playlist
+
+app.get('/userplaylist',verifytoken,(req,res)=>{
+  const userEmailToFind = req.email;
+  Playlist.findOne({ email: userEmailToFind })
+  .then(foundPlaylist => {
+    if (foundPlaylist) {
+      res.send(foundPlaylist);
+      console.log('Playlist found:', foundPlaylist);
+    } else {
+      res.send('Please Add a song to Playlist')
+      console.log('Playlist not found for the specified user.');
+    }
+  })
+  .catch(error => {
+    res.send('Error finding playlist:',error);
+    console.error('Error finding playlist:', error);
+  })
+})
+
+//code to delete a specific song from playlist
+
+app.post('/deletesong',verifytoken,async(req,res)=>{
+  try {
+    const updatedPlaylist = await Playlist.findOneAndUpdate(
+      { email : req.email },
+      { $pull: { songs: req.body } },
+      { new: true }
+    );
+
+    if (updatedPlaylist) {
+      res.send(updatedPlaylist)
+      console.log('Song deleted from the playlist:', updatedPlaylist);
+    } else {
+      res.send('Playlist not found for the specified user.')
+      console.log('Playlist not found for the specified user.');
+    }
+  } catch (error) {
+    res.send('error')
+    console.error('Error deleting song from playlist:', error);
+  }
+
+})

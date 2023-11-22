@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const { verifytoken } = require("./middleware/authtoken");
 
 const corsOptions = {
-  origin: "http://localhost:3000", // Adjust this to your frontend origin
+  origin: ["http://localhost:3000","https://react-music-app-sigma.vercel.app/"], // Adjust this to your frontend origin
   credentials: true,
 };
 

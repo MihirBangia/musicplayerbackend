@@ -61,6 +61,7 @@ app.post("/login", async (req, res) => {
         res.cookie("token", token, {
           httpOnly: true,
           secure: false,
+          sameSite:'none'
         });
         res.send("login success");
       } else {

@@ -10,12 +10,12 @@ module.exports.verifytoken =(req,res,next)=>{
     if (token) {
       jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-          return res.status(401).json({ message: "Invalid token" });
+          res.status(401).json({ songs: "Invalid token" });
         }
         req.email=decoded.email
         next()
       });
     } else {
-      res.status(401).json({ message: "Token not found" });
+      res.send({ songs: "NOT_LOGGED_IN" });
     }
 }

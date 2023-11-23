@@ -19,5 +19,5 @@
         "Access-Control-Allow-Origin": "https://musicplayer-wheat.vercel.app"
       }
     }
-  ],
+  ]
 }

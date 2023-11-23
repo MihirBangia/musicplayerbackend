@@ -9,13 +9,13 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { verifytoken } = require("./middleware/authtoken");
 
-const corsOptions = {
-  origin: ["http://localhost:3000","https://react-music-app-sigma.vercel.app/"], // Adjust this to your frontend origin
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: "http://localhost:3002", // Adjust this to your frontend origin
+//   credentials: true,
+// };
 
 dotenv.config();
-app.use(cors(corsOptions));
+app.use(cors());
 const secret = process.env.JWT_WEB_TOKEN;
 
 app.use(express.json());
@@ -140,4 +140,12 @@ app.post('/deletesong',verifytoken,async(req,res)=>{
     console.error('Error deleting song from playlist:', error);
   }
 
+})
+
+app.get('/checklogin', verifytoken, (req, res)=>{
+  if (req.email) {
+    res.send('LOGGED_IN')
+  }else{
+    res.send('NOT_LOGGED_IN')
+  }
 })

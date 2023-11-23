@@ -9,13 +9,13 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { verifytoken } = require("./middleware/authtoken");
 
-// const corsOptions = {
-//   origin: "http://localhost:3002", // Adjust this to your frontend origin
-//   credentials: true,
-// };
+const corsOptions = {
+  origin: '*', // Adjust this to your frontend origin
+  credentials: true,
+};
 
 dotenv.config();
-app.use(cors());
+app.use(cors(corsOptions));
 const secret = process.env.JWT_WEB_TOKEN;
 
 app.use(express.json());

@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const { verifytoken } = require("./middleware/authtoken");
 
 const corsOptions = {
-  origin: 'https://musicplayer-wheat.vercel.app/', // Adjust this to your frontend origin
+  origin: 'https://musicplayer-wheat.vercel.app', // Adjust this to your frontend origin
   credentials: true,
 };
 

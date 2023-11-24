@@ -7,9 +7,6 @@
       "config": {}
     }
   ],
-  {
-  "rewrites": [{ "source": "/(.*)", "destination": "./index.js" }]
-},
   "routes": [
     {
       "src": "/(.*)",

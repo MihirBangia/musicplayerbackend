@@ -60,7 +60,7 @@ app.post("/login", async (req, res) => {
         );
         res.cookie("token", token, {
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite:'none'
         });
         res.send("login success");

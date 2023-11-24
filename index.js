@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const { verifytoken } = require("./middleware/authtoken");
 
 const corsOptions = {
-  origin: 'https://musicplayer-wheat.vercel.app', // Adjust this to your frontend origin
+  origin: ['https://musicplayer-wheat.vercel.app', 'http://localhost:3002'], // Adjust this to your frontend origin
   credentials: true,
 };
 
@@ -61,7 +61,7 @@ app.post("/login", async (req, res) => {
         res.cookie("token", token, {
           httpOnly: true,
           secure: false,
-          sameSite:'none'
+          // sameSite:'none'
         });
         res.send("login success");
       } else {
@@ -91,7 +91,7 @@ app.post("/addtoplaylist", verifytoken, async (req, res) => {
       }
     })
     .then((updatedPlaylist) => {
-      console.log("Playlist updated:", updatedPlaylist);
+      // console.log("Playlist updated:", updatedPlaylist);
       res.send(updatedPlaylist)
     })
     .catch((error) => {
@@ -107,7 +107,7 @@ app.get('/userplaylist',verifytoken,(req,res)=>{
   .then(foundPlaylist => {
     if (foundPlaylist) {
       res.send(foundPlaylist);
-      console.log('Playlist found:', foundPlaylist);
+      // console.log('Playlist found:', foundPlaylist);
     } else {
       res.send('Please Add a song to Playlist')
       console.log('Playlist not found for the specified user.');
@@ -131,7 +131,7 @@ app.post('/deletesong',verifytoken,async(req,res)=>{
 
     if (updatedPlaylist) {
       res.send(updatedPlaylist)
-      console.log('Song deleted from the playlist:', updatedPlaylist);
+      // console.log('Song deleted from the playlist:', updatedPlaylist);
     } else {
       res.send('Playlist not found for the specified user.')
       console.log('Playlist not found for the specified user.');

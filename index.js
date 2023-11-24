@@ -101,7 +101,7 @@ app.post("/addtoplaylist", verifytoken, async (req, res) => {
 
 //code for getting user specific playlist
 
-app.get('/userplaylist',verifytoken,(req,res)=>{
+app.get('https://musicplayerbackend.vercel.app/userplaylist',verifytoken,(req,res)=>{
   const userEmailToFind = req.email;
   Playlist.findOne({ email: userEmailToFind })
   .then(foundPlaylist => {
